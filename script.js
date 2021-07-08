@@ -7,6 +7,7 @@ const modal = document.querySelector('.modal');
 const overlay = document.querySelector('.overlay');
 const btnCloseModal = document.querySelector('.btn--close-modal');
 const btnsOpenModal = document.querySelectorAll('.btn--show-modal');
+const nav = document.querySelector('.nav');
 
 const openModal = function (e) {
   e.preventDefault();
@@ -79,6 +80,25 @@ tabsContainer.addEventListener('click', e=>{
 
     //activate content
     document.querySelector(`.operations__content--${clicked.dataset.tab}`).classList.add('operations__content--active');
-
-
 })
+
+
+//Menu Fade animation
+const handler = function(e){
+  if (e.target.classList.contains('nav__link')) {
+    const link = e.target;
+    const siblings = link.closest('nav').querySelectorAll('.nav__link');
+    const logo = link.closest('nav').querySelector('img');
+
+    siblings.forEach(sib => {
+      if (sib !== link) {
+        sib.style.opacity = this;
+      }
+    });
+    logo.style.opacity = this;
+  }
+}
+
+nav.addEventListener('mouseover', handler.bind(0.5))
+nav.addEventListener('mouseout', handler.bind(1));
+
