@@ -19,8 +19,7 @@ const closeModal = function () {
   overlay.classList.add('hidden');
 };
 
-
-btnsOpenModal.forEach(btn => btn.addEventListener('click',openModal));
+btnsOpenModal.forEach(btn => btn.addEventListener('click', openModal));
 
 btnCloseModal.addEventListener('click', closeModal);
 overlay.addEventListener('click', closeModal);
@@ -31,12 +30,55 @@ document.addEventListener('keydown', function (e) {
   }
 });
 
-
 //implementing smooth scroll
 
 const btnScrollTo = document.querySelector('.btn--scroll-to');
 const section1 = document.getElementById('section--1');
 
-btnScrollTo.addEventListener('click', () =>{
-  section1.scrollIntoView('smooth');
+btnScrollTo.addEventListener('click', () => {
+  section1.scrollIntoView({ behavior: 'smooth' });
+});
+
+//nav_links scrollintoview
+// document.querySelectorAll('.nav__link').forEach(elem =>{
+//   elem.addEventListener('click', (e) =>{
+//       e.preventDefault();
+//       document.querySelector(`${e.target.getAttribute('href')}`).scrollIntoView({behavior: 'smooth'})
+//   })
+// })
+
+//using event delegation to implement above
+document.querySelector('.nav__links').addEventListener('click', e => {
+  e.preventDefault();
+  //matching strategy
+  if (e.target.classList.contains('nav__link')) {
+    document
+      .querySelector(`${e.target.getAttribute('href')}`)
+      .scrollIntoView({ behavior: 'smooth' });
+  }
+});
+
+//Tabbed component
+
+const tabs = document.querySelectorAll('.operations__tab');
+const tabsContainer = document.querySelector('.operations__tab-container');
+const tabsContent = document.querySelectorAll('.operations__content');
+
+tabsContainer.addEventListener('click', e=>{
+    const clicked = e.target.closest('.operations__tab');
+
+    //gaurd clause
+    if(!clicked) return;
+
+    //remove active classes
+    tabs.forEach(t => t.classList.remove('operations__tab--active'));
+    tabsContent.forEach(c => c.classList.remove('operations__content--active'));
+
+    //activate tab
+    clicked.classList.add('operations__tab--active');
+
+    //activate content
+    document.querySelector(`.operations__content--${clicked.dataset.tab}`).classList.add('operations__content--active');
+
+
 })
