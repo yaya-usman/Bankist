@@ -84,7 +84,7 @@ tabsContainer.addEventListener('click', e=>{
 
 
 //Menu Fade animation
-const handler = function(e){
+const handleHover = function(e){
   if (e.target.classList.contains('nav__link')) {
     const link = e.target;
     const siblings = link.closest('nav').querySelectorAll('.nav__link');
@@ -99,6 +99,62 @@ const handler = function(e){
   }
 }
 
-nav.addEventListener('mouseover', handler.bind(0.5))
-nav.addEventListener('mouseout', handler.bind(1));
+nav.addEventListener('mouseover', handleHover.bind(0.5))
+nav.addEventListener('mouseout', handleHover.bind(1));
 
+//Implementing the sticky nav
+
+const initiCoords = section1.getBoundingClientRect();
+
+//the inefficient way but still works
+// window.addEventListener('scroll', ()=>{
+//     if(window.scrollY > initiCoords.top) nav.classList.add('sticky')
+//     else nav.classList.remove('sticky')
+// })
+
+
+//using Intersection observer API 
+const header = document.querySelector('.header');
+const navHeight = nav.getBoundingClientRect().height;
+
+const obsCallback = function(entries){
+  const [entry] = entries;
+
+  if(!entry.isIntersecting) nav.classList.add('sticky');
+  else nav.classList.remove('sticky');
+
+}
+
+const obsOption = {
+  root: null,
+  threshold: 0,
+  rootMargin: `-${navHeight}px`
+}
+
+const headerObserver = new IntersectionObserver(obsCallback, obsOption);
+headerObserver.observe(header);
+
+//reveal section
+
+const allSections = document.querySelectorAll('.section');
+
+const revealSection = function(entries, observer){
+  const [entry] = entries;
+  
+  if(!entry.isIntersecting) return;
+
+  entry.target.classList.remove('section--hidden');
+  observer.unobserve(entry.target);
+
+}
+
+
+const sectionObserver = new IntersectionObserver(revealSection, {
+  root: null,
+  threshold: 0.15
+})
+
+allSections.forEach(section =>{
+    sectionObserver.observe(section);
+    section.classList.add('section--hidden');
+})
